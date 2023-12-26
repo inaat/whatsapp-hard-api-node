@@ -1,0 +1,1831 @@
+{
+    "collection": {
+        "info": {
+            "_postman_id": "3267c07d-49b4-432b-96d9-8a4cc94b3848",
+            "name": "whatsapp-hard-api-nodejs",
+            "description": "## **API** Documentation\n\n### whatsapp-hard-api-nodejs\n\n[https://github.com/renatoiub/whatsapp-hard-api-node](https://github.com/renatoiub/whatsapp-hard-api-node)\n\nAn implementation of [Baileys](https://github.com/adiwajshing/Baileys/) as a simple RESTful API service with multi device support just `download`, `install`, and `start` using, `simple` as that.\n\nBuild with NodeJs + Express\n\n---\n\n## Legal Notice\n\n- This code is in no way affiliated, authorized, maintained, sponsored or endorsed by WA(WhatsApp) or any of its affiliates or subsidiaries.\n- The official WhatsApp website can be found at [https://whatsapp.com](https://whatsapp.com). \"WhatsApp\" as well as related names, marks, emblems and images are registered trademarks of their respective owners.\n- This is an independent and unofficial software Use at your own risk.\n- Do not spam people with this.\n    \n\n---\n\n## Contact\n\nDeveloper: [https://github.com/renatoiub/](https://github.com/renatoiub/whatsapp-hard-api-node)\n\nEmail: [renatoiub@live.com](https://mailto:renatoiub@live.com)\n\nInstagram: @renatoiub.  \nContribua com o projeto e receba atualizações:  \nPix: [empresa@estoqueintegrado.com](https://mailto:empresa@estoqueintegrado.com)",
+            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+            "updatedAt": "2023-12-18T20:50:16.000Z",
+            "uid": "26659340-3267c07d-49b4-432b-96d9-8a4cc94b3848"
+        },
+        "item": [
+            {
+                "name": "Instance",
+                "item": [
+                    {
+                        "name": "Init Instance",
+                        "id": "67b14080-1a37-4385-837a-e637ebea02bf",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "RANDOM_STRING_HERE",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\"key\":\"\",\"browser\":\"Chrome (Linux)\", \"webhook\":false,\"base64\":true,\"webhookUrl\":\"\",\"webhookEvents\":[\"messages.upsert\"],\"ignoreGroups\":true,\"messagesRead\":false}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/init",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "init"
+                                ]
+                            },
+                            "description": "Init a new WhatsApp instance"
+                        },
+                        "response": [],
+                        "uid": "26659340-67b14080-1a37-4385-837a-e637ebea02bf"
+                    },
+                    {
+                        "name": "edit instance",
+                        "id": "11db213d-e046-467b-b972-63edd6ee33c1",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\"key\":\"\",\"browser\":\"Chrome (Linux)\", \"webhook\":false,\"base64\":true,\"webhookUrl\":\"\",\"webhookEvents\":[\"message.upsert\"],\"ignoreGroups\":true,\"messagesRead\":false}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/editar",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "editar"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "webhook",
+                                        "value": "true",
+                                        "description": "Allow Webhook\n(Optional) ",
+                                        "disabled": true
+                                    }
+                                ]
+                            },
+                            "description": "Init a new WhatsApp instance"
+                        },
+                        "response": [],
+                        "uid": "26659340-11db213d-e046-467b-b972-63edd6ee33c1"
+                    },
+                    {
+                        "name": "get pairing code",
+                        "id": "667586dd-d2a2-4098-9daa-17a80973ea26",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "urlencoded",
+                                "urlencoded": [
+                                    {
+                                        "key": "number",
+                                        "value": "",
+                                        "description": "Numero do telefone ddi+ddd+numeros\nxiste uma regra para envio Brasileiro: ddd até 27 -> 11 digitos, de 29 a 99 ->10 digitos",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/getcode?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "getcode"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "webhook",
+                                        "value": "true",
+                                        "description": "Allow Webhook\n(Optional) ",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Init a new WhatsApp instance"
+                        },
+                        "response": [],
+                        "uid": "26659340-667586dd-d2a2-4098-9daa-17a80973ea26"
+                    },
+                    {
+                        "name": "Scan QR",
+                        "id": "ad0a29c8-29a4-4ddf-ac9d-bd0356b36f43",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "RANDOM_STRING_HERE",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/qr?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "qr"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Get an instance QrCode"
+                        },
+                        "response": [],
+                        "uid": "26659340-ad0a29c8-29a4-4ddf-ac9d-bd0356b36f43"
+                    },
+                    {
+                        "name": "Get QR in Base64",
+                        "id": "a6b1464e-39b3-4aa0-9621-bd1a6142ae21",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/qrbase64?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "qrbase64"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            }
+                        },
+                        "response": [],
+                        "uid": "26659340-a6b1464e-39b3-4aa0-9621-bd1a6142ae21"
+                    },
+                    {
+                        "name": "Instance Info",
+                        "id": "c2e84adc-007e-4fa4-a36e-aa3870df0e2e",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "RANDOM_STRING_HERE",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/info?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "info"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Get an instance info"
+                        },
+                        "response": [],
+                        "uid": "26659340-c2e84adc-007e-4fa4-a36e-aa3870df0e2e"
+                    },
+                    {
+                        "name": "Restore All Instances",
+                        "id": "908b1d9e-0ba8-471c-bee4-854e702b5c37",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "RANDOM_STRING_HERE",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/restore",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "restore"
+                                ]
+                            }
+                        },
+                        "response": [],
+                        "uid": "26659340-908b1d9e-0ba8-471c-bee4-854e702b5c37"
+                    },
+                    {
+                        "name": "Delete Instance",
+                        "id": "004a90de-7ac7-44ab-b6aa-4035ef5eab4f",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "RANDOM_STRING_HERE",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "DELETE",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/delete?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "delete"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Delete an instance"
+                        },
+                        "response": [],
+                        "uid": "26659340-004a90de-7ac7-44ab-b6aa-4035ef5eab4f"
+                    },
+                    {
+                        "name": "Logout Instance",
+                        "id": "af58b2b5-6156-4e00-8610-bcac776a010e",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "RANDOM_STRING_HERE",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "DELETE",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/logout?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "logout"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Logout WhatsApp session from mobile"
+                        },
+                        "response": [],
+                        "uid": "26659340-af58b2b5-6156-4e00-8610-bcac776a010e"
+                    },
+                    {
+                        "name": "List All Sessions",
+                        "id": "fd58222c-e2c8-4c22-8992-ebd1064bc6e2",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "auth": {
+                                "type": "bearer",
+                                "bearer": [
+                                    {
+                                        "key": "token",
+                                        "value": "RANDOM_STRING_HERE",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/list",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "list"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "active",
+                                        "value": "true",
+                                        "description": "List Active Instances\n(Optional) ",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ]
+                            },
+                            "description": "List all Instances"
+                        },
+                        "response": [],
+                        "uid": "26659340-fd58222c-e2c8-4c22-8992-ebd1064bc6e2"
+                    },
+                    {
+                        "name": "Delete all Inactive session",
+                        "id": "e5622b42-3669-4e0d-85b4-fedbefe65e3a",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/deleteInactives",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "deleteInactives"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "active",
+                                        "value": "true",
+                                        "description": "List Active Instances\n(Optional) ",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ]
+                            },
+                            "description": "List all Instances"
+                        },
+                        "response": [],
+                        "uid": "26659340-e5622b42-3669-4e0d-85b4-fedbefe65e3a"
+                    },
+                    {
+                        "name": "Delete all sessions",
+                        "id": "9db05370-383e-4e46-9bf3-37d08089bb99",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/instance/deleteAll",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "instance",
+                                    "deleteAll"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "active",
+                                        "value": "true",
+                                        "description": "List Active Instances\n(Optional) ",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ]
+                            },
+                            "description": "List all Instances"
+                        },
+                        "response": [],
+                        "uid": "26659340-9db05370-383e-4e46-9bf3-37d08089bb99"
+                    }
+                ],
+                "id": "1370712d-c5ae-46e9-8d64-8317c5f3f59b",
+                "uid": "26659340-1370712d-c5ae-46e9-8d64-8317c5f3f59b"
+            },
+            {
+                "name": "Message",
+                "item": [
+                    {
+                        "name": "Send Text Message",
+                        "id": "94ffdb8a-b55e-4ce1-a4b5-0ee7064c725d",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\r\n  \"id\": \"\", ///ddi+ddd+número, existe uma regra para envio Brasileiro: ddd até 27 -> 11 digitos, de 29 a 99 ->10 digitos\r\n  \"typeId\": \"user\", //group ou user\r\n  \"message\": \"\",\r\n  \"options\": {\r\n    \"delay\": 0,//para aparecer digitando..\r\n    \"replyFrom\": \"\" //id da mensagem que vc quer responder.\r\n  },\r\n  \"groupOptions\": {\r\n    \"markUser\": \"ghostMention\"// marca todo mundo sem aparecer a marcação ou você pode passar a id dos usuários [\"user1\",\"user2\"]\r\n  }\r\n}\r\n",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/message/text?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "message",
+                                    "text"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Send a text message to WhatsApp User or Group"
+                        },
+                        "response": [],
+                        "uid": "26659340-94ffdb8a-b55e-4ce1-a4b5-0ee7064c725d"
+                    },
+                    {
+                        "name": "Send url file",
+                        "id": "74c01908-eff9-449f-9773-eeac32fca4b1",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\r\n  \"id\": \"\",//user ou group\r\n  \"typeId\": \"user\",//user ou group\r\n  \"type\":\"audio\",//audio, video, image ou document\r\n  \"url\": \"\",\r\n  \"options\": {\r\n      \"caption\":\"\",\r\n     \"replyFrom\": \"\",\r\n     \"delay\": 0\r\n  }\r\n  \r\n}\r\n",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/message/sendurlfile?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "message",
+                                    "sendurlfile"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "caption",
+                                        "value": "",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Send an image message to WhatsApp User"
+                        },
+                        "response": [],
+                        "uid": "26659340-74c01908-eff9-449f-9773-eeac32fca4b1"
+                    },
+                    {
+                        "name": "Send audio file",
+                        "id": "c924e6b2-a076-4a35-ae72-44f46b581d4e",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "formdata",
+                                "formdata": [
+                                    {
+                                        "key": "file",
+                                        "description": "Video You Want to Send\n(Required)",
+                                        "type": "file",
+                                        "fileNotInWorkingDirectoryWarning": "This file isn't in your working directory. Teammates you share this request with won't be able to use this file. To make collaboration easier you can setup your working directory in Settings.",
+                                        "filesNotInWorkingDirectory": [
+                                            "/C:/Users/renat/Downloads/WhatsApp Ptt 2023-12-18 at 20.05.05.ogg"
+                                        ],
+                                        "value": null
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "description": "Recipient Id or Group Id\n(Required)",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "caption",
+                                        "value": "caption",
+                                        "description": "Message Caption\n(Optional) ",
+                                        "type": "text",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "userType",
+                                        "value": "user",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "replyFrom",
+                                        "value": "",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "delay",
+                                        "value": "0",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/message/audiofile?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "message",
+                                    "audiofile"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Send a video message to WhatsApp User"
+                        },
+                        "response": [],
+                        "uid": "26659340-c924e6b2-a076-4a35-ae72-44f46b581d4e"
+                    },
+                    {
+                        "name": "Send image file",
+                        "id": "16ca4269-acd2-437f-92b6-9701d1a6f624",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "formdata",
+                                "formdata": [
+                                    {
+                                        "key": "file",
+                                        "description": "Video You Want to Send\n(Required)",
+                                        "type": "file",
+                                        "value": null
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "description": "Recipient Id or Group Id\n(Required)",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "caption",
+                                        "value": "caption",
+                                        "description": "Message Caption\n(Optional) ",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "userType",
+                                        "value": "user",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "replyFrom",
+                                        "value": "",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/message/imageFile?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "message",
+                                    "imageFile"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Send a video message to WhatsApp User"
+                        },
+                        "response": [],
+                        "uid": "26659340-16ca4269-acd2-437f-92b6-9701d1a6f624"
+                    },
+                    {
+                        "name": "Send Video File",
+                        "id": "8271fb6a-48ad-4102-acab-e99156d48a9d",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "formdata",
+                                "formdata": [
+                                    {
+                                        "key": "file",
+                                        "description": "Video You Want to Send\n(Required)",
+                                        "type": "file",
+                                        "fileNotInWorkingDirectoryWarning": "This file isn't in your working directory. Teammates you share this request with won't be able to use this file. To make collaboration easier you can setup your working directory in Settings.",
+                                        "filesNotInWorkingDirectory": [
+                                            "/C:/Users/renat/Downloads/WhatsApp Video 2023-12-18 at 21.02.56.mp4"
+                                        ],
+                                        "value": null
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "description": "Recipient Id or Group Id\n(Required)",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "caption",
+                                        "value": "video",
+                                        "description": "Message Caption\n(Optional) ",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "userType",
+                                        "value": "user",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "replyFrom",
+                                        "value": "",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/message/video?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "message",
+                                    "video"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Send a video message to WhatsApp User"
+                        },
+                        "response": [],
+                        "uid": "26659340-8271fb6a-48ad-4102-acab-e99156d48a9d"
+                    },
+                    {
+                        "name": "Send Document File",
+                        "id": "a5dfc351-8def-4b95-bce6-d35d80b89f1b",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "formdata",
+                                "formdata": [
+                                    {
+                                        "key": "file",
+                                        "description": "Document You Want to Send\n(Required)",
+                                        "type": "file",
+                                        "value": null
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "5516988427610",
+                                        "description": "Recipient Id or Group Id\n(Required)",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "filename",
+                                        "value": "",
+                                        "description": "Custom File Name\n(Optional)",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "userType",
+                                        "value": "user",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "replyFrom",
+                                        "value": "",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "caption",
+                                        "value": "",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/message/doc?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "message",
+                                    "doc"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Send a document message to WhatsApp User"
+                        },
+                        "response": [],
+                        "uid": "26659340-a5dfc351-8def-4b95-bce6-d35d80b89f1b"
+                    },
+                    {
+                        "name": "Send Contact Message",
+                        "id": "8182d194-45f3-47dc-b33c-c9e5035f9190",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{   \n    \"id\": \"\",\n    \"vcard\": {\n        \"fullName\": \"john doe\",\n        \"displayName\": \"johndoe\",\n        \"organization\": \"Men In Black\",\n        \"phoneNumber\": \"919999999999\"\n    }\n}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/message/contact?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "message",
+                                    "contact"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Send an contact(vcard) message to an WhatsApp User"
+                        },
+                        "response": [],
+                        "uid": "26659340-8182d194-45f3-47dc-b33c-c9e5035f9190"
+                    },
+                    {
+                        "name": "Send Presense",
+                        "id": "270fca66-1bc5-40d0-aba8-0732a603d46d",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "urlencoded",
+                                "urlencoded": [
+                                    {
+                                        "key": "status",
+                                        "value": "recording",
+                                        "description": "recording para gravar audio composing para aparecer digitando",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "delay",
+                                        "value": "10",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/message/setstatus?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "message",
+                                    "setstatus"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Send an list button message to WhatsApp User"
+                        },
+                        "response": [],
+                        "uid": "26659340-270fca66-1bc5-40d0-aba8-0732a603d46d"
+                    }
+                ],
+                "id": "3a71fa6c-68fc-43ac-90c1-475406301e59",
+                "uid": "26659340-3a71fa6c-68fc-43ac-90c1-475406301e59"
+            },
+            {
+                "name": "Misc",
+                "item": [
+                    {
+                        "name": "Is On Whatsapp?",
+                        "id": "f9873af1-d981-48fa-8aff-3d366c211103",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/misc/onwhatsapp?key={{instance_key}}&id=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "misc",
+                                    "onwhatsapp"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "{{instance_key}}",
+                                        "description": "Instance Key\n(Required)"
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "description": "User Whatsapp Id\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Check if a number is registered on WhatsApp"
+                        },
+                        "response": [],
+                        "uid": "26659340-f9873af1-d981-48fa-8aff-3d366c211103"
+                    },
+                    {
+                        "name": "Download Profile Pic",
+                        "id": "09bd7aa7-3930-4bae-a5c8-57ff3b08347e",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/misc/downProfile?key={{instance_key}}&id=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "misc",
+                                    "downProfile"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "{{instance_key}}",
+                                        "description": "Instance Key\n(Required)"
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "description": "User Whatsapp Id\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Download Profile pic of an WhatsApp user"
+                        },
+                        "response": [],
+                        "uid": "26659340-09bd7aa7-3930-4bae-a5c8-57ff3b08347e"
+                    },
+                    {
+                        "name": "Get User Status",
+                        "id": "1fb7d49e-c732-4bd6-85ca-73f1c7937070",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/misc/getStatus?key=&id=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "misc",
+                                    "getStatus"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "description": "User Id\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Get user status (about)."
+                        },
+                        "response": [],
+                        "uid": "26659340-1fb7d49e-c732-4bd6-85ca-73f1c7937070"
+                    },
+                    {
+                        "name": "Block/Unblock User",
+                        "id": "23153a4a-98c1-4179-81b0-5a177e03ebd7",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/misc/blockUser?key=&id=&block_status=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "misc",
+                                    "blockUser"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "description": "User Id\n(Required)"
+                                    },
+                                    {
+                                        "key": "block_status",
+                                        "value": "",
+                                        "description": "block / unblock"
+                                    }
+                                ]
+                            },
+                            "description": "Block Or Unblock User."
+                        },
+                        "response": [],
+                        "uid": "26659340-23153a4a-98c1-4179-81b0-5a177e03ebd7"
+                    },
+                    {
+                        "name": "Update Profile Picture",
+                        "id": "d3cb4409-ca16-4469-a542-a0c03fddf6b7",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "urlencoded",
+                                "urlencoded": [
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "url",
+                                        "value": "",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "type",
+                                        "value": "",
+                                        "description": "user or group",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/misc/updateProfilePicture?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "misc",
+                                    "updateProfilePicture"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Block Or Unblock User."
+                        },
+                        "response": [],
+                        "uid": "26659340-d3cb4409-ca16-4469-a542-a0c03fddf6b7"
+                    },
+                    {
+                        "name": "Get Contacts",
+                        "id": "32353987-ea92-4176-8648-846d1d7fd95a",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/misc/contacts?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "misc",
+                                    "contacts"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            }
+                        },
+                        "response": [],
+                        "uid": "26659340-32353987-ea92-4176-8648-846d1d7fd95a"
+                    },
+                    {
+                        "name": "Update My online status",
+                        "id": "c7495ae1-e337-4a80-8ae6-ff4ca815fca1",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "formdata",
+                                "formdata": [
+                                    {
+                                        "key": "key",
+                                        "value": "renato",
+                                        "type": "text",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "status",
+                                        "value": "online",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/misc/mystatus?key=&status=unavailable",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "misc",
+                                    "mystatus"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    },
+                                    {
+                                        "key": "status",
+                                        "value": "unavailable",
+                                        "description": "available/unavailable -> Resolve o erro de notificações em outros dispositivos e muda pra não ficar online o temp todo."
+                                    }
+                                ]
+                            }
+                        },
+                        "response": [],
+                        "uid": "26659340-c7495ae1-e337-4a80-8ae6-ff4ca815fca1"
+                    }
+                ],
+                "id": "e842cea7-93ba-47df-ae9a-db1205edb9db",
+                "uid": "26659340-e842cea7-93ba-47df-ae9a-db1205edb9db"
+            },
+            {
+                "name": "Group",
+                "item": [
+                    {
+                        "name": "Create Group",
+                        "id": "e5139594-670f-42f2-8279-a95df41b087d",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\"name\":\"\",\"users\":[\"user1\",\"user2\"]}//enviar os usuários que vai por no grupo! Tome cuidado com pessoas que não possuem o seu contato, pois elas podem denunciar e vc pode ser banido.",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/create?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "create"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Create a group"
+                        },
+                        "response": [],
+                        "uid": "26659340-e5139594-670f-42f2-8279-a95df41b087d"
+                    },
+                    {
+                        "name": "Leave Group",
+                        "id": "a11b9672-cec6-488c-9175-2fa819b77ece",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "url": {
+                                "raw": "{{baseUrl}}/group/leave?key=&id=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "leave"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "description": "Group Id\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Leave a group by its ID"
+                        },
+                        "response": [],
+                        "uid": "26659340-a11b9672-cec6-488c-9175-2fa819b77ece"
+                    },
+                    {
+                        "name": "Invite User",
+                        "id": "f2608980-492f-467c-a037-f8a3fee04d14",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\"id\":\"\",\"users\":[\"user1\",\"user2\"]}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/inviteuser?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "inviteuser"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Invite Users to Group"
+                        },
+                        "response": [],
+                        "uid": "26659340-f2608980-492f-467c-a037-f8a3fee04d14"
+                    },
+                    {
+                        "name": "remove user",
+                        "id": "0cb770b4-9f98-4cc3-bec2-94b2cd2b471b",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\"id\":\"\",\"users\":[\"user1\",\"user2\"]}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/removeuser?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "removeuser"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Invite Users to Group"
+                        },
+                        "response": [],
+                        "uid": "26659340-0cb770b4-9f98-4cc3-bec2-94b2cd2b471b"
+                    },
+                    {
+                        "name": "Make Admin",
+                        "id": "9c3a54c6-e8e1-4723-8001-db3df13c6fd7",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\"id\":\"\",\"users\":[\"user1\",\"user2\"]}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/makeadmin?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "makeadmin"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Promote group users to admin"
+                        },
+                        "response": [],
+                        "uid": "26659340-9c3a54c6-e8e1-4723-8001-db3df13c6fd7"
+                    },
+                    {
+                        "name": "Demote Admin",
+                        "id": "7980498a-685f-4fb1-a739-6361bd0d3696",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "raw",
+                                "raw": "{\"id\":\"\",\"users\":[\"user1\",\"user2\"]}",
+                                "options": {
+                                    "raw": {
+                                        "language": "json"
+                                    }
+                                }
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/demoteadmin?key=3",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "demoteadmin"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "3",
+                                        "description": "Instance Key\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Demote group admin"
+                        },
+                        "response": [],
+                        "uid": "26659340-7980498a-685f-4fb1-a739-6361bd0d3696"
+                    },
+                    {
+                        "name": "Get Group Invite url",
+                        "id": "7f5b402b-2138-4be2-9c38-700bb030988b",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "body": {
+                                "mode": "urlencoded",
+                                "urlencoded": []
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/getinvitecode?key=&id=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "getinvitecode"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "key",
+                                        "value": "",
+                                        "description": "Instance Key\n(Required)"
+                                    },
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "description": "Group Id\n(Required)"
+                                    }
+                                ]
+                            },
+                            "description": "Get invite link of a group"
+                        },
+                        "response": [],
+                        "uid": "26659340-7f5b402b-2138-4be2-9c38-700bb030988b"
+                    },
+                    {
+                        "name": "Get All Groups",
+                        "id": "38b4f613-b5d8-4184-b245-b0a617e7dc94",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "GET",
+                            "header": [],
+                            "body": {
+                                "mode": "urlencoded",
+                                "urlencoded": []
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/getallgroups?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "getallgroups"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "",
+                                        "value": "",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Get invite link of a group"
+                        },
+                        "response": [],
+                        "uid": "26659340-38b4f613-b5d8-4184-b245-b0a617e7dc94"
+                    },
+                    {
+                        "name": "Get group details from url",
+                        "id": "d6b8daf7-b620-4933-8c88-4fa6c59aee99",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "urlencoded",
+                                "urlencoded": [
+                                    {
+                                        "key": "url",
+                                        "value": "",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/groupurlinfo?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "groupurlinfo"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "",
+                                        "value": "",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Get invite link of a group"
+                        },
+                        "response": [],
+                        "uid": "26659340-d6b8daf7-b620-4933-8c88-4fa6c59aee99"
+                    },
+                    {
+                        "name": "Get group details from ID",
+                        "id": "ca211331-5d5d-4a84-9ce5-3063c3684970",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "urlencoded",
+                                "urlencoded": [
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/groupidinfo?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "groupidinfo"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "",
+                                        "value": "",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Get invite link of a group"
+                        },
+                        "response": [],
+                        "uid": "26659340-ca211331-5d5d-4a84-9ce5-3063c3684970"
+                    },
+                    {
+                        "name": "Update Group Setting",
+                        "id": "359e7f51-5c54-461f-b582-8da9b7c686cd",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "urlencoded",
+                                "urlencoded": [
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "action",
+                                        "value": "not_announcement",
+                                        "description": "not_announcement = Todos enviam mensagem\nannouncement = Somente admins enviam mensagem\nunlocked = Todos podem alterar foto e descrição do grupo\nlocked = Apenas admins podem alterar foto e descrição do grupo",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/settingsupdate?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "settingsupdate"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "",
+                                        "value": "",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Get invite link of a group"
+                        },
+                        "response": [],
+                        "uid": "26659340-359e7f51-5c54-461f-b582-8da9b7c686cd"
+                    },
+                    {
+                        "name": "Update Group Subject",
+                        "id": "67b9835f-24f3-4edb-8119-8d45d0c5502c",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "urlencoded",
+                                "urlencoded": [
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "subject",
+                                        "value": "",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/updatesubject?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "updatesubject"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "",
+                                        "value": "",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Get invite link of a group"
+                        },
+                        "response": [],
+                        "uid": "26659340-67b9835f-24f3-4edb-8119-8d45d0c5502c"
+                    },
+                    {
+                        "name": "Update Group Description",
+                        "id": "a638846f-258a-4455-a105-55546d7c6155",
+                        "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                        },
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "urlencoded",
+                                "urlencoded": [
+                                    {
+                                        "key": "id",
+                                        "value": "",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "description",
+                                        "value": "",
+                                        "type": "text"
+                                    }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{baseUrl}}/group/updatedescription?key=",
+                                "host": [
+                                    "{{baseUrl}}"
+                                ],
+                                "path": [
+                                    "group",
+                                    "updatedescription"
+                                ],
+                                "query": [
+                                    {
+                                        "key": "",
+                                        "value": "",
+                                        "disabled": true
+                                    },
+                                    {
+                                        "key": "key",
+                                        "value": ""
+                                    }
+                                ]
+                            },
+                            "description": "Get invite link of a group"
+                        },
+                        "response": [],
+                        "uid": "26659340-a638846f-258a-4455-a105-55546d7c6155"
+                    }
+                ],
+                "id": "28b82f18-4df1-4829-9538-df057d6c4637",
+                "uid": "26659340-28b82f18-4df1-4829-9538-df057d6c4637"
+            }
+        ],
+        "event": [
+            {
+                "listen": "prerequest",
+                "script": {
+                    "id": "a4553604-951d-46a6-9ccf-6744019634e4",
+                    "type": "text/javascript",
+                    "exec": [
+                        ""
+                    ]
+                }
+            },
+            {
+                "listen": "test",
+                "script": {
+                    "id": "d5b10132-cf7b-45ec-aa1b-e72ac7a26d25",
+                    "type": "text/javascript",
+                    "exec": [
+                        ""
+                    ]
+                }
+            }
+        ],
+        "variable": [
+            {
+                "id": "73f3ff4e-0e76-4c1e-bcba-389f0ddd4643",
+                "key": "baseUrl",
+                "value": "localhost:3333"
+            },
+            {
+                "id": "c221b226-83cd-4f57-ab02-c22aa483a690",
+                "key": "instance_key",
+                "value": "123"
+            }
+        ]
+    }
+}

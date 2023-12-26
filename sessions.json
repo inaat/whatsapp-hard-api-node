@@ -1,0 +1,26 @@
+[
+  {
+    "key": "",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": "",
+    "browser": "Chrome (Linux)",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "551252",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": "",
+    "browser": "Chrome (Linux)",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  }
+]
