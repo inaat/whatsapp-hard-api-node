@@ -96,10 +96,4 @@ The API does not use any database.
 The API is multi-device and accepts multiple connected numbers.
 The average memory consumption varies with the number of instances and is extremely light.
 
-Contribute to the project and receive updates:
-Contact:
-Developer: https://github.com/renatoiub/
-Email: renatoiub@live.com
-Instagram: @renatoiub.
-Contribute to the project and receive updates:
-Pix: empresa@estoqueintegrado.com
+
