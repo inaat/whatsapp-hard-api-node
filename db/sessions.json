@@ -1,0 +1,24 @@
+[
+  {
+    "key": "888",
+    "ignoreGroups": true,
+    "webhook": true,
+    "base64": true,
+    "webhookUrl": "http://helpdesk.test/api/webhook",
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert",
+      "messages.update",
+      "connection.update",
+      "qrCode.update",
+      "contacts.upsert",
+      "chats.upsert",
+      "chats.delete",
+      "call.events",
+      "groups.upsert",
+      "groups.update",
+      "group-participants.update"
+    ],
+    "messagesRead": true
+  }
+]
