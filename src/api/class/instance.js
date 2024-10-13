@@ -709,6 +709,7 @@ sock?.ev.on('presence.update', async (json) => {
     });
 
     sock?.ev.on('messages.update', async (m) => {
+        console.log('messages.update',m)
         try {
             await this.SendWebhook('updateMessage', 'messages.update', m, this.key);
         } catch (e) {
