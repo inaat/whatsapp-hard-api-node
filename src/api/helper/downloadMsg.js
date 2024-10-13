@@ -9,6 +9,7 @@ module.exports = async function downloadMessage(msg, msgType) {
         for await (const chunk of stream) {
             buffer = Buffer.concat([buffer, chunk])
         }
+        
     } catch {
         return console.log('error downloading file-message')
     }
