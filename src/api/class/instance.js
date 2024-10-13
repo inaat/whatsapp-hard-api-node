@@ -693,6 +693,7 @@ sock?.ev.on('presence.update', async (json) => {
 
     sock?.ev.on('chats.upsert', async (newChat) => {
         try {
+            console.log('chats.upsert',newChat);
             await this.SendWebhook('chats', 'chats.upsert', newChat, this.key);
         } catch (e) {
             return;
@@ -717,7 +718,7 @@ sock?.ev.on('presence.update', async (json) => {
 
     // on new mssage
     sock?.ev.on('messages.upsert', async (m) => {
-	
+	    console.log('messages.upsert',m)
         if (m.type === 'prepend') this.instance.messages.unshift(...m.messages);
         if (m.type !== 'notify') return;
 

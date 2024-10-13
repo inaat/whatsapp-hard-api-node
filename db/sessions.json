@@ -1,6 +1,6 @@
 [
   {
-    "key": "888",
+    "key": "onayat",
     "ignoreGroups": true,
     "webhook": true,
     "base64": true,
@@ -11,6 +11,7 @@
       "messages.update",
       "connection.update",
       "qrCode.update",
+      "presence.update",
       "contacts.upsert",
       "chats.upsert",
       "chats.delete",

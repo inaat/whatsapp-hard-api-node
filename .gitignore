@@ -10,6 +10,7 @@ sessiondata
 # IDEs
 .vscode/settings.json
 .idea
-db/888
+db
 indext.html
 login.html
+
