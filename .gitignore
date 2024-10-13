@@ -5,7 +5,6 @@ yarn.lock
 
 # APPLICATION
 .env
-sessiondata
 
 # IDEs
 .vscode/settings.json
@@ -13,4 +12,6 @@ sessiondata
 db
 indext.html
 login.html
+# Ignore db folder
+db/
 
