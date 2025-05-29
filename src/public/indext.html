@@ -1,0 +1,1489 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HARD API MANAGER</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jaeger/querystring/build/querystring.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha256"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <!-- Bootstrap CSS -->
+ 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+		    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="http://localhost:3333/css/toastr.min.css" rel="stylesheet">
+    <link href="http://localhost:3333/css/styles.css" rel="stylesheet"> <!-- Inclua o CSS customizado aqui -->
+	<link rel="icon" type="image/png" href="http://localhost:3333/img/favicon.png"/>	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emojionearea@3.4.1/dist/emojionearea.min.css">
+<script src="https://cdn.jsdelivr.net/npm/emojionearea@3.4.1/dist/emojionearea.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+    <script>
+       $(document).ready(function () {
+    	var intervalId; 
+		   
+		   $("#messageContent").emojioneArea({
+            pickerPosition: "bottom" 
+        });
+		   
+		   $('#selectContact').on('change', function(e) {
+                var selectedContactId = $(this).val();
+                $('#phoneNumber').val(selectedContactId.split('@')[0]);
+            });
+
+    
+		$('#webhook').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#webhookOptions').show();
+                } else {
+                    $('#webhookOptions').hide();
+                }
+            });
+
+            $('#generateKeyButton').click(function() {
+                $('#key').val(generateRandomKey());
+            });
+
+            function generateRandomKey() {
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let result = '';
+                const length = 25; 
+                for (let i = 0; i < length; i++) {
+                    result += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+                return result;
+            }
+
+            function submitForm(event) {
+                event.preventDefault(); 
+
+                const key = $('#key').val();
+                const browser = $('#browser').val();
+                const webhookUrl = $('#webhookUrl').val();
+                const webhook = $('#webhook').prop('checked');
+                const base64 = $('#base64').prop('checked');
+                const ignoreGroups = $('#ignoreGroups').prop('checked');
+                const messagesRead = $('#messagesRead').prop('checked');
+
+                if (!key || !browser || (webhook && !webhookUrl)) {
+                     toastr.error('Url do webhook não pode ser vazia');
+                    return false;
+                }
+
+                const webhookEvents = [];
+                for (let i = 1; i <= 12; i++) {
+                    const checkbox = $(`#event${i}`);
+                    if (checkbox.prop('checked')) {
+                        webhookEvents.push(checkbox.val());
+                    }
+                }
+
+                const data = {
+                    key,
+                    browser,
+                    webhook,
+                    base64,
+                    webhookUrl,
+                    webhookEvents,
+                    ignoreGroups,
+                    messagesRead
+                };
+
+                $.ajax({
+                    url: 'http://localhost:3333/instance/init?admintoken=da71b564a1ed7e998204ca0d7cae38e791ca2154',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+						if(response.error)
+							{
+                     toastr.error(response.message);
+							}
+						else
+							{
+						 toastr.success('Instância iniciada com sucesso.');
+								$('#instanceModal').modal('hide');
+								listarDados();
+							}
+                    },
+                    error: function(error) {
+                       toastr.success('Erro inesperado, tente novamente.');
+                    }
+                });
+            }
+		   
+		   
+
+
+
+
+	document.getElementById('editWebhook').addEventListener('change', toggleEditWebhookOptions);
+	   
+	document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+   
+    if (window.instanceKeyToDelete) {
+      
+        excluir(window.instanceKeyToDelete);
+        
+        window.instanceKeyToDelete = null;
+       
+        $('#confirmDeleteModal').modal('hide');
+    }
+});
+		   
+		   document.getElementById('editProfileImageForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); 
+
+    const formData = new FormData();
+    const fileInput = document.getElementById('profileImage');
+
+    if (fileInput.files.length === 0) {
+        toastr.error('Por favor, escolha uma imagem.');
+        return;
+    }
+
+    formData.append('profileImage', fileInput.files[0]);
+    formData.append('key', window.instanceKeyToEditImage);
+
+    try {
+        const response = await fetch('http://localhost:3333/uploadProfileImage', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            toastr.error(data.message);
+        } else {
+            toastr.success('Imagem de perfil atualizada com sucesso.');
+          
+            listarDados();
+            $('#editProfileImageModal').modal('hide');
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar a imagem de perfil:', error);
+        toastr.error('Erro ao atualizar a imagem de perfil');
+    }
+});
+
+	   
+		   
+document.getElementById('confirmDisconnectButton').addEventListener('click', function() {
+  
+    if (window.instanceKeyToDisconnect) {
+      
+        desconectar(window.instanceKeyToDisconnect);
+       
+        window.instanceKeyToDisconnect = null;
+     
+        $('#confirmDisconnectModal').modal('hide');
+    }
+});
+		   
+		   
+
+window.submitForm = submitForm;
+   
+listarDados();		   
+$("#listarInstancias").click(listarDados);		
+
+});
+	
+	
+
+async function editar(instanceKey) {
+    try {
+        const response = await fetch(`http://localhost:3333/instance/info?key=${instanceKey}`);
+        const data = await response.json();
+
+        if (data.error) {
+            toastr.error(data.message);
+            return;
+        }
+
+        const instance = data.instance_data;
+
+        document.getElementById('editKey').value = instance.instance_key;
+        document.getElementById('editBrowser').value = instance.browser;
+        document.getElementById('editWebhook').checked = instance.webhook;
+        document.getElementById('editWebhookUrl').value = instance.webhookUrl !== false ? instance.webhookUrl : '';
+        document.getElementById('editBase64').checked = instance.base64;
+        document.getElementById('editIgnoreGroups').checked = instance.ignoreGroups;
+        document.getElementById('editMessagesRead').checked = instance.messagesRead;
+
+      
+        const events = instance.webhookEvents;
+        for (let i = 1; i <= 12; i++) {
+            document.getElementById(`editEvent${i}`).checked = events.includes(document.getElementById(`editEvent${i}`).value);
+        }
+
+       
+        toggleEditWebhookOptions();
+
+      
+        $('#editInstanceModal').modal('show');
+    } catch (error) {
+        console.error('Erro ao buscar dados da instância:', error);
+        toastr.error('Erro inesperado, tente novamente.');
+    }
+}
+
+function toggleEditWebhookOptions() {
+    const webhookChecked = document.getElementById('editWebhook').checked;
+    document.getElementById('editWebhookOptions').style.display = webhookChecked ? 'block' : 'none';
+}
+
+
+
+	function submitEditForm(event) {
+    event.preventDefault(); 
+
+    const key = $('#editKey').val();
+    const browser = $('#editBrowser').val();
+    const webhookUrl = $('#editWebhookUrl').val();
+    const webhook = $('#editWebhook').prop('checked');
+    const base64 = $('#editBase64').prop('checked');
+    const ignoreGroups = $('#editIgnoreGroups').prop('checked');
+    const messagesRead = $('#editMessagesRead').prop('checked');
+
+    if (!key || !browser || (webhook && !webhookUrl)) {
+        toastr.error('Url do webhook não pode ser vazia');
+        return false;
+    }
+
+    const webhookEvents = [];
+    for (let i = 1; i <= 12; i++) {
+        const checkbox = $(`#editEvent${i}`);
+        if (checkbox.prop('checked')) {
+            webhookEvents.push(checkbox.val());
+        }
+    }
+
+    const data = {
+        key,
+        browser,
+        webhook,
+        base64,
+        webhookUrl,
+        webhookEvents,
+        ignoreGroups,
+        messagesRead
+    };
+
+    $.ajax({
+        url: 'http://localhost:3333/instance/editar', 
+        type: 'POST', 
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(response) {
+            if (response.error) {
+                toastr.error(response.message);
+            } else {
+                toastr.success('Instância atualizada com sucesso.');
+                $('#editInstanceModal').modal('hide');
+                listarDados();
+            }
+        },
+        error: function(error) {
+            toastr.error('Erro inesperado, tente novamente.');
+        }
+    });
+}
+
+	
+	
+		
+function listarDados() {
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:3333/instance/list?admintoken=da71b564a1ed7e998204ca0d7cae38e791ca2154",
+        data: { listar: true },
+        success: function (response) {
+            var data = response;
+			if(data.login)
+				{
+					relogin();
+					
+				}
+            $("#dados").empty();
+
+            
+            if (!data.data || data.data.length === 0) {
+                toastr.warning('Nenhuma instância foi detectada.');
+			 $('#total').text('0');
+            $('#conectadas').text('0');
+            $('#desconectadas').text('0');
+                return;  
+            }
+
+            var total = data.data.length; 
+            var conectadas = 0; 
+            var desconectadas = 0; 
+
+           
+            $.each(data.data, function (index, item) {
+                if (item.phone_connected) {
+                    conectadas++;
+                } else {
+                    desconectadas++;
+                }
+
+               
+                var card = '<div class="col-md-4 mb-3"><div class="card"><div class="card-body d-flex align-items-start">';
+
+               
+                var profileImg = '';
+              if (item.phone_connected) {
+        profileImg = `
+            <div class="profile-wrapper"  style="position: relative; display: inline-block;">
+         <a href="#"  onclick="confirmarEdicaoImagem('${item.instance_key}')" data-bs-toggle="tooltip" title="Editar Foto">
+                <img src="" class="img-fluid rounded-circle profile-img me-3" alt="Profile Image" style="width: 50px; height: 50px;">
+
+
+		</a>
+  
+                    
+            </div>`;
+    }
+				var instanceKey = item.instance_key.substring(0, 18);
+
+                var content = '<div style="margin-left: 10px;">';
+                content += '<h5 class="card-title">' + instanceKey + '</h5>';
+                content += '<p class="card-text mb-1">Telefone conectado: ';
+                content += item.phone_connected ? '<span class="badge bg-success">Online</span>' : '<span class="badge bg-danger">Offline</span>';
+                content += '</p>';
+                content += '<p class="card-text mb-1">Webhook: ';
+                content += item.webhook ? '<span class="badge bg-success">Enabled</span>' : '<span class="badge bg-danger">Disabled</span>';
+                content += '</p>';
+                if (item.phone_connected) {
+                    var phoneNumber = item.user.id.split(':')[0]; 
+                    content += '<p class="card-text mb-1">Numero: ' + phoneNumber + '</p>';
+                } else {
+                    content += '<p class="card-text mb-1">Numero: <small>DESCONECTADO</small></p>';
+                }
+                content += '</div>';
+
+                card += profileImg;
+                card += content;
+                card += '</div>'; 
+
+                card += '<div class="" style="margin-top: -10px; margin-left:20px;">';
+               
+                card += '<button class="btn btn-outline-dark mb-2" onclick="editar(\'' + item.instance_key + '\')" data-bs-toggle="tooltip" title="Editar"><i class="fas fa-edit"></i></button>';
+                card += '<button class="btn btn-outline-dark mb-2" onclick="confirmarExclusao(\'' + item.instance_key + '\')" data-bs-toggle="tooltip" title="Excluir"><i class="fas fa-trash-alt"></i></button>';
+                if (item.phone_connected) {
+					card += '<button class="btn btn-outline-dark mb-2" onclick="gruposMessage(\'' + item.instance_key + '\')" data-bs-toggle="tooltip" title="New message for groups"><i class="fas fa-users"></i></button>';
+					card += '<a href="/manager/client?key='+ item.instance_key + '" target="_bank"><button class="btn btn-outline-dark mb-2" data-bs-toggle="tooltip" title="Link de conexão"><i class="fa fa-link" ></i></button></a>';
+					card += '<button class="btn btn-outline-dark mb-2" onclick="mensagem(\'' + item.instance_key + '\')" data-bs-toggle="tooltip" title="New Message"><i class="fa fa-paper-plane"></i></button>';
+                    card += '<button class="btn btn-outline-dark mb-2" onclick="confirmarDesconexao(\'' + item.instance_key + '\')" data-bs-toggle="tooltip" title="Desconectar"><i class="fas fa-power-off"></i></button>';
+                } else {
+					card += '<a href="/manager/client?key='+ item.instance_key + '" target="_bank"><button class="btn btn-outline-dark mb-2" data-bs-toggle="tooltip" title="Link de conexão"><i class="fa fa-link" ></i></button></a>';
+                    card += '<button class="btn btn-outline-dark mb-2" onclick="conectarAparelho(\'' + item.instance_key + '\')" data-bs-toggle="tooltip" title="Conectar"><i class="fas fa-qrcode"></i></button>';
+                }
+                card += '</div></div></div>';  // Fechar o card
+
+               
+                var $card = $(card);
+
+                $("#dados").append($card);
+
+              
+                if (item.phone_connected) {
+                    var $profileImg = $card.find(".profile-img");
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:3333/misc/downProfile?key=" + item.instance_key,
+                        data: { id: phoneNumber + '@s.whatsapp.net' },
+                        success: function (profileResponse) {
+                            var profileData = profileResponse.data;
+                            $profileImg.attr("src", profileData);
+                        }
+                    });
+                }
+            });
+
+            
+            $('#total').text(total);
+            $('#conectadas').text(conectadas);
+            $('#desconectadas').text(desconectadas);
+
+           
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+    });
+}
+
+
+
+
+
+$("#listarInstancias").click(listarDados);
+
+function relogin() {
+    toastr.error('Faça login novamente!');
+    setTimeout(function() {
+        window.location.href = "http://localhost:3333/manager/login"; // Certifique-se de que a URL está correta
+        return;
+    }, 3000);
+	return
+}
+
+
+		
+		
+function conectarAparelho(instanceValue) {
+      
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:3333/instance/qrbase64",
+            data: { key: instanceValue},
+            success: function (response) {
+             var data = response;
+				if(data.login)
+				{
+					relogin();
+					
+				}
+                if (data.error) {
+                    $("#myModal").modal("hide");
+                     toastr.warning('Telefone já conectado');
+                } else {
+                    $("#qrcode").text('Gerando qr code..');
+                    $("#myModal").modal("show");
+                    intervalId = setInterval(function () {
+                        atualizarQRCode(instanceValue);
+                    }, 4000);
+                }
+            }
+        });
+    }
+		
+		function atualizarQRCode(instanceValue) {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:3333/instance/qrbase64",
+            data: { key: instanceValue },
+            success: function (response) {
+              var data = response;
+				if(data.login)
+				{
+					relogin();
+					
+				}
+                if (data.error) {
+                    $("#myModal").modal("hide");
+                     toastr.success('Telefone conectado!', {
+    onClose: function() {
+      
+        window.location.href = "/"; 
+    }
+});
+                    clearInterval(intervalId);
+					listarDados();	
+					
+					
+                } else {
+                    $("#qrcode").empty();
+                    var img = new Image();
+                    img.src = data.qrcode;
+                    $("#qrcode").append(img);
+                }
+            }
+        });
+    }
+	
+	function confirmarExclusao(instanceKey) {
+  
+    window.instanceKeyToDelete = instanceKey;
+    
+    $('#confirmDeleteModal').modal('show');
+}
+
+async function excluir(instanceKey) {
+	try{
+    
+    fetch(`http://localhost:3333/instance/delete?key=${instanceKey}`)
+        .then(response => {
+		if(response.login)
+				{
+					relogin();
+					
+				}
+            if (response.error) {
+                toastr.error(response.message);
+            }
+		else
+		{
+		
+         
+            toastr.success('Instância excluída com sucesso');
+			listarDados();
+			 $('#confirmDeleteModal').modal('hide');
+            
+		}
+		
+        })
+	}
+        catch(error) {
+          
+           
+            toastr.error('Erro ao excluir instância');
+        }
+}
+function confirmarDesconexao(instanceKey) {
+ 
+    window.instanceKeyToDisconnect = instanceKey;
+
+    $('#confirmDisconnectModal').modal('show');
+}
+async function desconectar(instanceKey) {
+    try {
+      
+        const response = await fetch(`http://localhost:3333/instance/logout?key=${instanceKey}`);
+        const data = await response.json();
+        if(data.login)
+				{
+					relogin();
+					
+				}
+        if (data.error) {
+            toastr.error(data.message);
+        } else {
+          
+            toastr.success('Instância desconectada com sucesso');
+            listarDados();
+            $('#confirmDisconnectModal').modal('hide');
+           
+        }
+    } catch (error) {
+       
+        console.error('Erro ao desconectar instância:', error);
+        toastr.error('Erro ao desconectar instância');
+    }
+}
+	
+	function confirmarEdicaoImagem(instanceKey) {
+  
+    window.instanceKeyToEditImage = instanceKey;
+
+    $('#editProfileImageModal').modal('show');
+}
+
+async function excluiAll() {
+    try {
+        const response = await fetch('http://localhost:3333/instance/deleteAll?admintoken=da71b564a1ed7e998204ca0d7cae38e791ca2154');
+        const data = await response.json();
+		if(data.login)
+				{
+					relogin();
+					
+				}
+
+        if (data.error) {
+            toastr.error(data.message);
+        } else {
+            toastr.success('Instâncias deletadas com sucesso');
+          
+            listarDados();
+            $('#deleteAll').modal('hide');
+        }
+    } catch (error) {
+        
+        toastr.error('Erro ao excluir todas as instancias');
+    }
+}
+async function excluiInactives() {
+    try {
+        const response = await fetch('http://localhost:3333/instance/deleteInactives?admintoken=da71b564a1ed7e998204ca0d7cae38e791ca2154');
+        const data = await response.json();
+			if(data.login)
+				{
+					relogin();
+					
+				}
+
+        if (data.error) {
+            toastr.error(data.message);
+        } else {
+            toastr.success('Instâncias inativas deletadas com sucesso');
+            
+            listarDados();
+            $('#DeleteInactives').modal('hide');
+        }
+    } catch (error) {
+       
+        toastr.error('Erro ao excluir todas as instancias inativas');
+    }
+}	
+ var currentInstanceKey = '';
+
+
+
+function mensagem(instanceKey) {
+    currentInstanceKey = instanceKey;
+
+   
+    fetch('http://localhost:3333/misc/contacts/getContacts?key=' + instanceKey)
+        .then(response => {
+		if(response.login)
+				{
+					relogin();
+					
+				}
+            if (!response.ok) {
+                toastr.warning('Seus contatos ainda não foram carregados');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            if (data.data && data.data.error === false && data.data.contacts && data.data.contacts.length > 0) {
+              
+                var dataList = document.getElementById('contactsList');
+                dataList.innerHTML = ""; 
+                data.data.contacts.forEach(function(contact) {
+                    var option = document.createElement('option');
+                    option.value = contact.name;
+                    option.setAttribute('data-contact-id', contact.id);
+                    dataList.appendChild(option);
+                });
+
+               
+                document.getElementById('contactInput').addEventListener('input', function() {
+                    var input = this.value;
+                    var contactOption = document.querySelector(`#contactsList option[value="${input}"]`);
+                    if (contactOption) {
+                        var contactId = contactOption.getAttribute('data-contact-id');
+                       
+                        var phoneNumber = contactId.replace('@s.whatsapp.net', '');
+                        document.getElementById('phoneNumber').value = phoneNumber;
+                    } else {
+                        document.getElementById('phoneNumber').value = ''; // Limpa o campo 
+                    }
+                });
+
+               
+                
+            } else {
+                toastr.warning('Seus contatos ainda não foram carregados');
+            }
+        })
+        //.catch(error => {
+           //toastr.warning('Seus contatos ainda não foram carregados');
+        //});
+	$('#newMessage').modal('show');
+}
+
+
+
+	
+async function sendMessage() {
+	
+	
+	
+            var phoneNumber = $('#phoneNumber').val();
+            var messageContent = $("#messageContent").data("emojioneArea").getText();
+
+            if (phoneNumber && messageContent) {
+                $.post('http://localhost:3333//message', {
+                    instance_key: currentInstanceKey,
+                    phone_number: phoneNumber,
+                    message: messageContent,
+					type : 'user'
+                }).done(function(data) {
+						if(data.login)
+				{
+					relogin();
+					
+				}
+                  if (data.error) {
+            toastr.error(data.message);
+        		} else {
+            toastr.success('Mensagem enviada com sucesso');
+            $("#messageContent").data("emojioneArea").setText('');
+            
+            $('#selectContact').val(null).trigger('change');
+        			}
+                }).fail(function(error) {
+                    toastr.error('Erro ao enviar a mensagem');
+                });
+            } else {
+                 toastr.error('Preencha todos os campos');
+            }
+}
+var currentGroup = '';
+var currentGroupInstance =''
+function gruposMessage(instanceKey) {
+    currentGroupInstance = instanceKey
+    $('#newGroupMessage').modal('show');
+
+   
+    $.ajax({
+        url: 'http://localhost:3333/listGroups', 
+        data: { key: instanceKey },
+        method: 'GET',
+        success: function(data) {
+            if (data.error) {
+                console.error('Erro ao buscar grupos:', data.message);
+                return;
+            }
+
+            // Preenche o datalist com os grupos
+            const $groupList = $('#groupList');
+            $groupList.empty(); // Limpa qualquer dado existente
+            $.each(data.data, function(id, group) {
+                const $option = $('<option>').val(group.subject).data('group', group);
+                $groupList.append($option);
+            });
+
+           
+            $('#groupId').on('input', function() {
+                const selectedOption = $(`#groupList option[value="${$(this).val()}"]`);
+                const group = selectedOption.data('group');
+                if (group) {
+                    displayGroupInfo(group);
+					currentGroup = group
+                } else {
+                    $('#groupInfo').addClass('d-none');
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Erro ao fazer requisição:', error);
+        }
+    });
+}
+
+	
+function displayGroupInfo(group) {
+	currentGroup = group
+	console.log(group.id);
+				$.ajax({
+                        type: "POST",
+                        url: "http://localhost:3333/profile?key=" +currentGroupInstance,
+                        data: { id: group.id, group:true },
+                        success: function (profileResponse) {
+                            var profileData = profileResponse.data;
+                             $('#groupImage').attr('src', profileData); 
+                        }
+                    });
+	
+   
+   $('#size').text(`Quantidade de membros: ${group.size}`);
+    $('#restrictBadge').text(group.restrict ? 'Somente admin podem alterar as configurações' : 'Todos podem alterar as configurações')
+                       .toggleClass('bg-success', group.restrict)
+                       .toggleClass('bg-secondary', !group.restrict);
+    $('#announceBadge').text(group.announce ? 'Somente admin podem enviar mensagens' : 'Todos podem enviar mensagens')
+                       .toggleClass('bg-success', group.announce)
+                       .toggleClass('bg-secondary', !group.announce);
+    $('#communityBadge').text(group.isCommunity ? 'É comunidade' : 'Não é comunidade')
+                        .toggleClass('bg-success', group.isCommunity)
+                        .toggleClass('bg-secondary', !group.isCommunity);
+
+   
+    $('#groupInfo').removeClass('d-none');
+}
+
+function showParticipants() {
+    const group = currentGroup;
+	console.log(group)
+
+    const participants = group.participants;
+    const $participantsList = $('#participantsList');
+    $participantsList.empty(); 
+console.log(participants)
+    $.each(participants, function(index, participant) {
+	
+        const $participantItem = $('<li class="list-group-item">').text(participant.id);
+        if (participant.admin) {
+            $participantItem.append($('<span class="badge bg-primary ms-2">').text(participant.admin));
+        }
+        $participantsList.append($participantItem);
+    });
+}
+function sendGroupMessage() {
+    const $groupIdInput = $('#groupId');
+    const $selectedOption = $(`#groupList option[value="${$groupIdInput.val()}"]`);
+    const groupId = $selectedOption.data('group').id;
+    const messageContent = $('#messageGroupContent').val();
+	const isChecked = $('#markall').prop('checked');
+
+   
+    if (!groupId || !messageContent) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+    }
+
+    
+    else {
+                $.post('http://localhost:3333//message', {
+                    instance_key: currentGroupInstance,
+                    phone_number: groupId,
+                    message: messageContent,
+					type : 'group',
+					ghostmention:isChecked 
+                }).done(function(data) {
+						if(data.login)
+				{
+					relogin();
+					
+				}
+                  if (data.error) {
+            toastr.error(data.message);
+        		} else {
+            toastr.success('Mensagem enviada com sucesso');
+            $("#messageGroupContent").val('');
+            
+           
+        			}
+                }).fail(function(error) {
+                    toastr.error('Erro ao enviar a mensagem');
+                });
+            } 
+}
+	function copyToClipboard(elementId) {
+            var copyText = document.getElementById(elementId);
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); 
+            document.execCommand("copy");
+            toastr.success('Copiado com sucesso');
+        }
+		
+</script>
+
+</head>
+<body>
+    <!-- Navbar for Mobile View -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        
+        <a class="navbar-brand text-white" href="#">Hard API</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto text-center">
+                <li class="nav-item">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceModal" class="btn btn-dark text-white m-1">
+                        <i class="fas fa-plus-circle"></i> Nova instância
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="http://localhost:3333/manager/dashboard" class="btn btn-dark text-white m-1">
+                        <i class="fas fa-list"></i> Listar instâncias
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#deleteAll" class="btn btn-dark text-white m-1">
+                        <i class="fas fa-trash-alt"></i> Apagar todas as instâncias
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#DeleteInactives" class="btn btn-dark text-white m-1">
+                        <i class="fas fa-trash"></i> Apagar inativas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#postmanAdmin" class="btn btn-dark text-white m-1">
+                        <i class="fas fa-code"></i> Postman Collection
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#"  data-bs-toggle="modal" data-bs-target="#keysAdmin" class="btn btn-dark text-white m-1">
+                        <i class="fas fa-key"></i> Chaves de acesso
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="http://localhost:3333/manager/logout" class="btn btn-dark text-white m-1">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+  
+
+        <div id="content">
+            <audio controls>
+                <source src="data:audio/ogg;base64,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" type="audio/ogg">
+                Your browser does not support the audio element.
+              </audio>
+			<div class="container">
+			<h5>Instâncias:</h5>
+          <div class="row align-items-center mb-3">
+    <div class="col-md-auto">
+        <p class="mb-0"><i class="fab fa-whatsapp fa-fw text-secondary"></i> Total: <span id="total" class="font-weight-bold text-primary"></span></p>
+    </div>
+    <div class="col-md-auto">
+        <p class="mb-0"><i class="fas fa-wifi fa-fw text-success"></i> Connected:<span id="conectadas" class="font-weight-bold text-primary"></span></p>
+    </div>
+    <div class="col-md-auto">
+        <p class="mb-0"><i class="fas fa-power-off fa-fw text-danger"></i> Desconectadas: <span id="desconectadas" class="font-weight-bold text-primary"></span></p>
+    </div>
+    <div class="col-md-auto">
+		<a href="http://localhost:3333/manager/dashboard">
+        <button type="button" class="btn btn-primary btn-sm" ><i class="fas fa-sync-alt"></i> Atualizar</button></a>
+    </div>
+</div>
+                <div id="dados" class="row"></div>
+			
+           
+                         <div class="modal fade" id="instanceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Nova Instância</h5>
+                    <button type="button"  class="btn-close" data-bs-dismiss="modal"  data-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="instanceForm" onsubmit="return submitForm(event)">
+                        <div class="form-group">
+                            <label for="key">Key</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="key" maxlength="25" value="" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="generateKeyButton">
+                                        <i class="fas fa-random"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="browser">Browser</label>
+                            <input type="text" class="form-control" id="browser" value="Ubuntu" maxlength="25" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input" id="webhook">
+                                <label class="custom-control-label" for="webhook">Webhook</label>
+                            </div>
+							
+                        </div>
+                        <div id="webhookOptions" style="display: none;">
+                            <div class="form-group">
+                                <label for="webhookUrl">Webhook URL</label>
+                                <input type="text" class="form-control" id="webhookUrl" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Webhook Events</label><br>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="connection.update" id="event1">
+                                    <label class="form-check-label" for="event1">connection.update</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="qrCode.update" id="event2">
+                                    <label class="form-check-label" for="event2">qrCode.update</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="presence.update" id="event3">
+                                    <label class="form-check-label" for="event3">presence.update</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="contacts.upsert" id="event4">
+                                    <label class="form-check-label" for="event4">contacts.upsert</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="chats.upsert" id="event5">
+                                    <label class="form-check-label" for="event5">chats.upsert</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="chats.delete" id="event6">
+                                    <label class="form-check-label" for="event6">chats.delete</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="messages.update" id="event7">
+                                    <label class="form-check-label" for="event7">messages.update</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="messages.upsert" id="event8" checked>
+                                    <label class="form-check-label" for="event8">messages.upsert</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="call.events" id="event9">
+                                    <label class="form-check-label" for="event9">call.events</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="groups.upsert" id="event10">
+                                    <label class="form-check-label" for="event10">groups.upsert</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="groups.update" id="event11">
+                                    <label class="form-check-label" for="event11">groups.update</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" value="group-participants.update" id="event12">
+                                    <label class="form-check-label" for="event12">group-participants.update</label>
+                                </div>
+                            
+								
+                                <div class="form-check custom-switch">
+                                    <input type="checkbox" class="form-check-input" id="base64" checked>
+                                    <label class="custom-control-label" for="base64">Receber arquivos em base64</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+							<label>Grupos:</label><br>
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input" id="ignoreGroups" checked>
+                                <label class="custom-control-label" for="ignoreGroups">Ignorar mensagens e eventos de grupos</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+							<label>Mensagens:</label><br>
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input" id="messagesRead">
+                                <label class="custom-control-label" for="messagesRead">Ler mensagens recebidas</label>
+                            </div>
+                        </div>
+						<br>
+                        <button type="submit" style="width:100%" class="btn btn-primary">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+			<div class="modal fade" id="editInstanceModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Editar Instância</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editInstanceForm" onsubmit="return submitEditForm(event)">
+                    <div class="form-group">
+                        <label for="editKey">Key</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="editKey" maxlength="25" disabled required>
+                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editBrowser">Browser</label>
+                        <input type="text" class="form-control" id="editBrowser" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" id="editWebhook">
+                            <label class="custom-control-label" for="editWebhook">Webhook</label>
+                        </div>
+                    </div>
+                    <div id="editWebhookOptions" style="display: none;">
+                        <div class="form-group">
+                            <label for="editWebhookUrl">Webhook URL</label>
+                            <input type="text" class="form-control" id="editWebhookUrl">
+                        </div>
+                        <div class="form-group">
+                            <label>Webhook Events</label><br>
+                            <!-- Lista completa dos eventos -->
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="messages.upsert" id="editEvent1">
+                                <label class="form-check-label" for="editEvent1">messages.upsert</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="messages.update" id="editEvent2">
+                                <label class="form-check-label" for="editEvent2">messages.update</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="connection.update" id="editEvent3">
+                                <label class="form-check-label" for="editEvent3">connection.update</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="qrCode.update" id="editEvent4">
+                                <label class="form-check-label" for="editEvent4">qrCode.update</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="presence.update" id="editEvent5">
+                                <label class="form-check-label" for="editEvent5">presence.update</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="contacts.upsert" id="editEvent6">
+                                <label class="form-check-label" for="editEvent6">contacts.upsert</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="chats.upsert" id="editEvent7">
+                                <label class="form-check-label" for="editEvent7">chats.upsert</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="chats.delete" id="editEvent8">
+                                <label class="form-check-label" for="editEvent8">chats.delete</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="call.events" id="editEvent9">
+                                <label class="form-check-label" for="editEvent9">call.events</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="groups.upsert" id="editEvent10">
+                                <label class="form-check-label" for="editEvent10">groups.upsert</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="groups.update" id="editEvent11">
+                                <label class="form-check-label" for="editEvent11">groups.update</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="group-participants.update" id="editEvent12">
+                                <label class="form-check-label" for="editEvent12">group-participants.update</label>
+                            </div>
+                        </div>
+                        <div class="form-check custom-switch">
+                            <input type="checkbox" class="form-check-input" id="editBase64">
+                            <label class="custom-control-label" for="editBase64">Receber arquivos em base64</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Grupos:</label><br>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" id="editIgnoreGroups">
+                            <label class="custom-control-label" for="editIgnoreGroups">Ignorar mensagens e eventos de grupos</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mensagens:</label><br>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" id="editMessagesRead">
+                            <label class="custom-control-label" for="editMessagesRead">Ler mensagens recebidas</label>
+                        </div>
+                    </div>
+                    <br>
+                    <button type="submit" style="width:100%" class="btn btn-primary">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  
+                        <div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">QR Code</h5>
+                <button type="button"  class="btn-close" data-bs-dismiss="modal"  data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="qrcode" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+			<!-- Modal de Confirmação -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmação de Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+			<!-- Modal de Confirmação de Desconexão -->
+<div class="modal fade" id="confirmDisconnectModal" tabindex="-1" aria-labelledby="confirmDisconnectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDisconnectModalLabel">Confirmação de Desconexão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja desconectar?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDisconnectButton">Desconectar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+			<!-- Modal de Edição de Imagem -->
+<div class="modal fade" id="editProfileImageModal" tabindex="-1" aria-labelledby="editProfileImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileImageModalLabel">Editar Imagem de Perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileImageForm">
+                    <div class="mb-3">
+                        <label for="profileImage" class="form-label">Escolher nova imagem</label>
+                        <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+			<!-- Modal de Confirmação -->
+<div class="modal fade" id="deleteAll" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmação de Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir todas as instancias? Esta ação não poderá ser revertida.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button onclick="excluiAll()" type="button" class="btn btn-danger" id="confirmDeleteButton">Excluir</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+			<!-- Modal de Confirmação -->
+<div class="modal fade" id="DeleteInactives" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmação de Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir todas as instâncias inativas?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button onclick="excluiInactives()" type="button" class="btn btn-danger" id="confirmDeleteButton">Excluir</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+			<!-- Modal de Nova Mensagem -->
+<div class="modal fade" id="newMessage" tabindex="-1" aria-labelledby="newMessageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newMessageModalLabel">Nova Mensagem</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">Número de Telefone</label>
+                    <input type="text" class="form-control" id="phoneNumber" placeholder="Digite o número de telefone">
+                </div>
+				<div class="mb-3">
+                        <label for="contactInput" class="form-label">ou Selecione o contato</label>
+                          <input type="text" id="contactInput" list="contactsList" class="form-control" placeholder="Procure um contato">
+                		<datalist id="contactsList"></datalist>
+                    </div>
+                <div class="mb-3">
+                    <label for="messageContent" class="form-label">Mensagem</label>
+                    <textarea class="form-control" id="messageContent" rows="3" placeholder="Digite sua mensagem"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" onclick="sendMessage()" class="btn btn-danger" id="sendMessageButton">Enviar mensagem</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+			<!-- Modal de Nova Mensagem -->
+<div class="modal fade" id="newGroupMessage" tabindex="-1" aria-labelledby="newMessageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newMessageModalLabel">Nova Mensagem</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="groupId" class="form-label">Selecione o Grupo</label>
+                    <input type="text" id="groupId" list="groupList" class="form-control" placeholder="Procure um grupo">
+                    <datalist id="groupList"></datalist>
+                </div>
+                <div id="groupInfo" class="d-none">
+                    <div class="row">
+                        <div class="col-4 text-center">
+                            <img id="groupImage" src="" alt="Group Image" class="img-thumbnail rounded-circle mb-2" style="width: 100px; height: 100px;"><br>
+                            <a href="#" onclick="showParticipants()" id="viewParticipants" data-bs-toggle="modal" data-bs-target="#participantsModal">Ver Participantes</a>
+                        </div>
+                        <div class="col-8">
+                            <div class="mb-2"><span id="size" class="badge bg-secondary">Quantidade de membros: </span></div>
+                            <div class="mb-2"><span id="restrictBadge" class="badge bg-secondary">Todos podem alterar as configurações</span></div>
+                            <div class="mb-2"><span id="announceBadge" class="badge bg-secondary">Todos podem enviar mensagens</span></div>
+                            <div class="mb-2"><span id="communityBadge" class="badge bg-secondary">É comunidade</span></div>
+                        </div>
+                    </div>
+					<br>
+                </div>
+				
+                <div class="mb-3">
+					<br>
+                    <label for="messageContent" class="form-label">Mensagem</label>
+                    <textarea class="form-control" id="messageGroupContent" rows="3" placeholder="Digite sua mensagem"></textarea>
+                </div>
+				<div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="markall">
+    <label for="markall" class="form-check-label">Marcar todos no grupo (GhostMention)</label>
+</div>
+			</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" onclick="sendGroupMessage()" class="btn btn-danger" id="sendMessageButton">Enviar mensagem</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Participantes -->
+<div class="modal fade" id="participantsModal" tabindex="-1" aria-labelledby="participantsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="participantsModalLabel">Participantes do Grupo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul id="participantsList" class="list-group"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+			    <div class="modal fade" id="keysAdmin" tabindex="-1" aria-labelledby="keysModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="keysModalLabel">Chaves de Acesso</h5>
+                    <button type="button"  class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Campo Instância -->
+                    <div class="mb-3">
+                        <label for="instancia" class="form-label">Token admin:</label>
+                        <div class="input-group">
+                            <input type="text" value="da71b564a1ed7e998204ca0d7cae38e791ca2154" class="form-control" id="instancia" >
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('instancia')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Campo Bearer Token -->
+                    <div class="mb-3">
+                        <label for="bearerToken" class="form-label">Campo Bearer Token:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="bearerToken" value="YOUR_TOKEN">
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('bearerToken')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+					<div class="mb-3">
+                        <label for="url_base" class="form-label">URL base:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="url_base" value="http://localhost:3333">
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('url_base')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+			    <div class="modal fade" id="postmanAdmin" tabindex="-1" aria-labelledby="keysModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="keysModalLabel">Documentação</h5>
+                    <button type="button"  class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Campo Instância -->
+                    <div class="mb-3">
+                     <p></p>
+						<a target="_blank" href="https://www.postman.com/bold-spaceship-404300/workspace/hard-api/collection/26659340-899ee985-66f7-44a9-8202-3c80edcc9954?action=share&creator=26659340">Link para visualizar a documentação online:</a>
+                    </div>
+					<div class="mb-3">
+                     <p></p>
+						
+                    </div>
+                    <!-- Campo Bearer Token -->
+                   
+					
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+
+    
+<footer class="footer mt-auto py-3 bg-dark text-white text-center">
+   
+         &copy; Hard API. Todos os direitos reservados.
+       
+
+     
+    
+</footer>
+
+
+
+    
+<script src="http://localhost:3333/js/toastr.min.js"></script>
+  <script>
+    // Configuração do Toastr
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": true,
+      "progressBar": true,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
+</script>
+
+	
+</body>
+</html>
