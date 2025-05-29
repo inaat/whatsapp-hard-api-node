@@ -1,0 +1,14 @@
+[
+  {
+    "key": "eress",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Chrome (Linux)",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  }
+]

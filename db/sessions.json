@@ -1,6 +1,176 @@
 [
   {
-    "key": "eress",
+    "key": "888",
+    "ignoreGroups": false,
+    "webhook": true,
+    "base64": true,
+    "webhookUrl": "http://helpdesk.injazatsoftware.net/api/webhook",
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert",
+      "messages.update",
+      "chats.upsert"
+    ],
+    "messagesRead": true
+  },
+  {
+    "key": "PAK",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "DN",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "KhyberPos",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "ABIDPOS",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "RDT",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "UMS",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "YST",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "g&c",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "GC",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "umt",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "CH",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "azeekhel",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Ubuntu",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "ss",
+    "ignoreGroups": true,
+    "webhook": false,
+    "base64": true,
+    "webhookUrl": false,
+    "browser": "Chrome (Linux)",
+    "webhookEvents": [
+      "messages.upsert"
+    ],
+    "messagesRead": false
+  },
+  {
+    "key": "ere",
     "ignoreGroups": true,
     "webhook": false,
     "base64": true,
